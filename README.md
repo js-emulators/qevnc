@@ -1,5 +1,5 @@
 # kolibri-online
- Try-It-Online version of KolibriOS, made with QEMU and connects through VNC. No QEMU or disk image installation needed.
+ Try-It-Online version of KolibriOS, made with QEMU and connects through VNC with svnc. No QEMU or disk image installation needed.
  
  # Set up
  ```
