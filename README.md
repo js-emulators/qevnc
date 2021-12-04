@@ -9,3 +9,4 @@
  cd app
  node .
  ```
+Navigate to http://localhost:8080 after setup.
