@@ -1,3 +1,4 @@
+global.processes = [];
 var existing_ports = [];
 function portgen(){
 var rnlength = Math.random().toString().split('.').pop().split('').length;
@@ -11,7 +12,7 @@ new_rnum = rnum.join('');
 }
 if (existing_ports.indexOf(new_rnum) !== -1) {
 existing_ports.push(new_rnum);
-}
+} 
 return new_rnum;
 }
 
@@ -19,6 +20,8 @@ function portrm(port){
        existing_ports = existing_ports.filter(function(ele){ 
             return ele != port; 
         });
+		global.processes[port].kill();
+		
 }
 
 var { spawn } = require('child_process');
@@ -36,19 +39,23 @@ app.get('/vnc.js', function(req, res){
 
 app.post('/api/init', function(req, res){
 	var port = portgen();
+	var http_default = "59" + port;
 	res.send({success: true, port: "59" + port});
-	global.cprocess = spawn("qemu-system-x86_64", ["-boot","d","-cdrom","kolibri.iso","-vnc","127.0.0.1:" + port], {stdio: "inherit"});
+	global.processes[http_default] = spawn("qemu-system-x86_64", ["-boot","d","-cdrom","kolibri.iso","-vnc","127.0.0.1:" + port], {stdio: "inherit"});
 });
 app.post('/api/reboot', function(req, res){
 	var port = portgen();
-global.cprocess.kill();
+	var port_to_kill = req.body.port;
+	var http_default = "59" + port;
+portrm(port_to_kill)
 setTimeout(function(){
-	global.cprocess = spawn("qemu-system-x86_64", ["-boot","d","-cdrom","kolibri.iso","-vnc","127.0.0.1:" + port], {stdio: "inherit"});
+	global.processes[http_default] = spawn("qemu-system-x86_64", ["-boot","d","-cdrom","kolibri.iso","-vnc","127.0.0.1:" + port], {stdio: "inherit"});
 }, 5000);
 	res.send({success: true, port: "59" + port});
 	});
 app.post('/api/off', function(req, res){
-global.cprocess.kill();
+		var port_to_kill = req.body.port;
+portrm(port_to_kill);
 	res.send({success: true});
 });
 app.get('/', function(req, res){
@@ -82,11 +89,12 @@ var canvas = document.getElementById('screen'),
 
 var screenWrapper = document.getElementById('screen-wrapper');
 
-  var config = {
+ window.config = {
     host: "127.0.0.1",
     port: res.port
   };
 
+alert(config.port);
   /* connect to a vnc server */
   client.connect(config).then(function() {
     screenWrapper.style.display = 'block';
@@ -94,7 +102,8 @@ document.querySelector('button').style.display = "none";
 document.querySelector('small').style.display = "none";
 document.body.onbeforeunload = function(){
 fetch('/api/off', {
-    method: 'POST'
+    method: 'POST',
+	body: JSON.stringify({port: config.port})
 })
 }
   }).catch(function(error) {
@@ -124,7 +133,7 @@ var canvas = document.getElementById('screen'),
 
 var screenWrapper = document.getElementById('screen-wrapper');
 
-  var config = {
+ window.config = {
     host: "127.0.0.1",
     port: "5904"
   };
