@@ -1,0 +1,99 @@
+<style>
+.display {
+	position: fixed;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 50%;
+}
+</style>
+<body>
+  <script src="vnc.js"></script>
+      <div id="screen-wrapper"  class="display" style="display: none;">
+          <canvas id="screen">
+          </canvas>
+        </div>
+		<button style="position: absolute; transform: translate(-50%, -50%); left: 50%; top: 50%;" onclick="init()">Connect</button>
+		<small style="position: absolute; transform: translate(-50%, -50%); left: 50%; top: 60%; display: none;"> Initializing virtual machine... </small>
+<script>
+function init(){
+document.querySelector('button').disabled = true;
+document.querySelector('small').style.display = "block";
+bootUp();
+};
+
+function bootUp(){
+fetch('http://localhost:8080/api/init', {
+    method: 'POST'
+})
+.then(res => res.json())
+.then(function(res){
+setTimeout(function(){
+ vnc(svnc => {
+    /* attach screen to canvas, create client */
+var canvas = document.getElementById('screen'),
+  screen = new svnc.Screen(canvas),
+  client = new svnc.Client(screen);
+
+var screenWrapper = document.getElementById('screen-wrapper');
+
+  var config = {
+    host: "127.0.0.1",
+    port: res.port
+  };
+
+  /* connect to a vnc server */
+  client.connect(config).then(function() {
+    screenWrapper.style.display = 'block';
+document.querySelector('button').style.display = "none";
+document.querySelector('small').style.display = "none";
+document.body.onbeforeunload = function(){
+fetch('http://localhost:8080/api/off', {
+    method: 'POST'
+})
+}
+  }).catch(function(error) {
+    console.error('Connect failed:', error);
+  })
+}, false);
+}, 10000);
+})
+;
+}
+
+function reboot(){
+fetch('http://localhost:8080/api/reboot', {
+    method: 'POST'
+})
+.then(res => res.json())
+.then(function(res){
+const context = document.querySelector('canvas').getContext('2d');
+
+context.clearRect(0, 0, document.querySelector('canvas').width, document.querySelector('canvas').height);
+
+setTimeout(function(){
+ vnc(svnc => {
+    /* attach screen to canvas, create client */
+var canvas = document.getElementById('screen'),
+  screen = new svnc.Screen(canvas),
+  client = new svnc.Client(screen);
+
+var screenWrapper = document.getElementById('screen-wrapper');
+
+  var config = {
+    host: "127.0.0.1",
+    port: res.port
+  };
+
+  /* connect to a vnc server */
+  client.connect(config).then(function() {
+    screenWrapper.style.display = 'block';
+  }).catch(function(error) {
+    console.error('Connect failed:', error);
+  })
+}, false);
+}, 15000);
+})
+;
+}
+</script>
+</body>

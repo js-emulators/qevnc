@@ -2075,7 +2075,7 @@ EventEmitter.prototype.emit = function emit(type) {
       throw er; // Unhandled 'error' event
     }
     // At least give some kind of context to the user
-    var err = new Error('Unhandled error.' + (er ? ' (' + er.message + ')' : ''));
+    console.log('VNC client: disconnected')
     err.context = er;
     throw err; // Unhandled 'error' event
   }
@@ -3255,9 +3255,7 @@ Screen.prototype._scale = function() {
   this._dy = (window.innerHeight - canvas.height * s) / 2 / s;
   var transform = 'scale(' + s + ') translate(' +
       this._dx + 'px, ' + this._dy + 'px)';
-  canvas.style.mozTransform = transform;
-  canvas.style.webkitTransform = transform;
-  canvas.style.transform = transform;
+
 };
 
 Screen.prototype._toScreenX = function(pageX){
