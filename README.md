@@ -5,8 +5,7 @@
  ```
  git clone https://github.com/Unzor/kolibri-online
  cd kolibri-online
- npm install
  cd app
- node .
+ npx electron .
  ```
 Navigate to http://localhost:8080 after setup.
