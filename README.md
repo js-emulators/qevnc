@@ -5,6 +5,7 @@
  ```
  git clone https://github.com/Unzor/kolibri-online
  cd kolibri-online
+ npm install
  cd app
  npx electron .
  ```
