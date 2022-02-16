@@ -217,34 +217,3 @@ server.on('disconnect', function(client){
 server.on('error', function(err){
   console.error('svnc error', err)
 })
-
-const loadMainWindow = () => {
-	var debugging = false;
-    const mainWindow = new BrowserWindow({
-        width : 1040,
-        height: 807,
-		 maximizable : false,
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
-
-    mainWindow.loadURL("http://localhost:8080");
-	
-	mainWindow.setResizable(false);
-		
-	    if (debugging == true) {    mainWindow.webContents.openDevTools()    }
-}
-
-appe.on("ready", loadMainWindow);
-
-appe.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    appe.quit();
-  }
-});
-appe.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-        loadMainWindow();
-    }
-});
