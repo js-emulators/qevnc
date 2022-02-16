@@ -1,12 +1,13 @@
-# kolibri-online
- Try-It-Online version of KolibriOS, made with QEMU and connects through VNC with svnc. No QEMU or disk image installation needed. Windows only.
- 
+# qevnc
+QEMU in the browser with VNC. 
+
  # Set up
  ```
- git clone https://github.com/Unzor/kolibri-online
- cd kolibri-online
+ git clone https://github.com/js-emulators/qevnc
+ cd qevnc
  npm install
  cd app
- npx electron .
+ node .
  ```
+You can change settings.json to run another disk image.
 Navigate to http://localhost:8080 after setup.
