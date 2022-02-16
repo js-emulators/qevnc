@@ -1,4 +1,4 @@
 {
   "boot": "d",
-  "cdrom": "kolibri.iso"
+  "fda": "kolibri.img"
 }
