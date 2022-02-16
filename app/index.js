@@ -20,7 +20,7 @@ existing_ports.push(new_rnum);
 return new_rnum;
 }
 
-var settings = JSON.parse(fs.readFileSync("settings.json").toString());
+var settings = JSON.parse(fs.readFileSync("../settings.json").toString());
 
 function json_to_args(e) {
   var n = [];
