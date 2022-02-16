@@ -1,10 +1,4 @@
-const electron = require("electron");
-var BrowserWindow = electron.BrowserWindow;
-var appe = electron.app;
-var Menu = electron.Menu;
-var screenElectron = electron.screen;
-
-Menu.setApplicationMenu(null);
+const fs = require("fs");
 
 const path = require("path");
 
@@ -27,7 +21,6 @@ return new_rnum;
 }
 
 var settings = JSON.parse(fs.readFileSync("settings.json").toString());
-settings.vnc = "127.0.0.1:1";
 
 function json_to_args(e) {
   var n = [];
@@ -64,17 +57,23 @@ app.get('/vnc.js', function(req, res){
 app.post('/api/init', function(req, res){
 	var port = portgen();
 	var http_default = "59" + port;
+	var e = settings.split(" ");
+	e.push("-vnc");
+	e.push("127.0.0.1:" + http_default);
 	res.send({success: true, port: "59" + port});
-	global.processes[http_default] = spawn("qemu-system-x86_64 " + settings, {shell: true, stdio: "inherit"});
+	global.processes[http_default] = spawn("qemu-system-x86_64 " + e, {shell: true, stdio: "inherit"});
 });
 app.post('/api/reboot', function(req, res){
 	var port = portgen();
 	var port_to_kill = req.body.port;
 	console.log(req.body, req.body.port);
 	var http_default = "59" + port;
+	var e = settings.split(" ");
+	e.push("-vnc");
+	e.push("127.0.0.1:" + http_default);
 portrm(port_to_kill)
 setTimeout(function(){
-	global.processes[http_default] = spawn("qemu-system-x86_64 " + settings, {shell: true, stdio: "inherit"});
+	global.processes[http_default] = spawn("qemu-system-x86_64 " + e, {shell: true, stdio: "inherit"});
 }, 5000);
 	res.send({success: true, port: "59" + port});
 	});
