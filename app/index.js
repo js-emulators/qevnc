@@ -5,7 +5,6 @@ const path = require("path");
 global.processes = [];
 var existing_ports = [];
 function portgen(){
-var rnlength = Math.random().toString().split('.').pop().split('').length;
 var rnum = Math.random().toString().split('.').pop().split('').slice(0, 2);
 global.new_rnum="";
 if (rnum[0] == '0') {
