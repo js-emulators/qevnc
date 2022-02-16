@@ -56,13 +56,14 @@ app.get('/vnc.js', function(req, res){
 
 app.post('/api/init', function(req, res){
 	var port = portgen();
-	var http_default = "59" + port;
 	var e = settings.split(" ");
 	e.push("-vnc");
-	e.push("127.0.0.1:" + http_default);
+	e.push("127.0.0.1:" + port);
 	e = e.join(" ")
+    var http_default = "59" + port;
 	res.send({success: true, port: "59" + port});
-	global.processes[http_default] = spawn("qemu-system-x86_64 " + e, {shell: true, stdio: "inherit"});
+	global.processes[http_default] = spawn("\"app/qemu-system-x86_64.exe\" " + e, {shell: true, stdio: "inherit"});
+		console.log("\"app/qemu-system-x86_64.exe\" " + e);
 });
 app.post('/api/reboot', function(req, res){
 	var port = portgen();
@@ -71,10 +72,11 @@ app.post('/api/reboot', function(req, res){
 	var http_default = "59" + port;
 	var e = settings.split(" ");
 	e.push("-vnc");
-	e.push("127.0.0.1:" + http_default);
+	e.push("127.0.0.1:" + port);
 portrm(port_to_kill)
 setTimeout(function(){
-	global.processes[http_default] = spawn("qemu-system-x86_64 " + e, {shell: true, stdio: "inherit"});
+	global.processes[http_default] = spawn("\"app/qemu-system-x86_64.exe\" " + e, {shell: true, stdio: "inherit"});
+	console.log("\"app/qemu-system-x86_64.exe\" " + e);
 }, 5000);
 	res.send({success: true, port: "59" + port});
 	});
