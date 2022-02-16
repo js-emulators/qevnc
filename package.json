@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron": "^16.0.4",
     "express": "^4.17.1",
     "pngjs": "^6.0.0",
     "rfb2": "^0.2.2",
