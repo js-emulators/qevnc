@@ -26,6 +26,19 @@ existing_ports.push(new_rnum);
 return new_rnum;
 }
 
+var settings = JSON.parse(fs.readFileSync("settings.json").toString());
+settings.vnc = "127.0.0.1:1";
+
+function json_to_args(e) {
+  var n = [];
+  for (var t in e) {
+    n.push("-" + t + " " + e[t]);
+  }
+  return n.join(" ")
+}
+
+settings = json_to_args(settings);
+
 function portrm(port){
        existing_ports = existing_ports.filter(function(ele){ 
             return ele != port; 
@@ -52,7 +65,7 @@ app.post('/api/init', function(req, res){
 	var port = portgen();
 	var http_default = "59" + port;
 	res.send({success: true, port: "59" + port});
-	global.processes[http_default] = spawn("qemu-system-x86_64", ["-boot","d","-cdrom","kolibri.iso","-vnc","127.0.0.1:" + port], {stdio: "inherit"});
+	global.processes[http_default] = spawn("qemu-system-x86_64 " + settings, {shell: true, stdio: "inherit"});
 });
 app.post('/api/reboot', function(req, res){
 	var port = portgen();
@@ -61,7 +74,7 @@ app.post('/api/reboot', function(req, res){
 	var http_default = "59" + port;
 portrm(port_to_kill)
 setTimeout(function(){
-	global.processes[http_default] = spawn("qemu-system-x86_64", ["-boot","d","-cdrom","kolibri.iso","-vnc","127.0.0.1:" + port], {stdio: "inherit"});
+	global.processes[http_default] = spawn("qemu-system-x86_64 " + settings, {shell: true, stdio: "inherit"});
 }, 5000);
 	res.send({success: true, port: "59" + port});
 	});
