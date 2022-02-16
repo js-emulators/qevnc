@@ -60,6 +60,7 @@ app.post('/api/init', function(req, res){
 	var e = settings.split(" ");
 	e.push("-vnc");
 	e.push("127.0.0.1:" + http_default);
+	e = e.join(" ")
 	res.send({success: true, port: "59" + port});
 	global.processes[http_default] = spawn("qemu-system-x86_64 " + e, {shell: true, stdio: "inherit"});
 });
